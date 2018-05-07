@@ -1,17 +1,17 @@
 from sympy import *
 import numpy as np
 
-p = Matrix(symbols("p1:4"))
-v = Matrix(symbols("v1:4"))
+p = Matrix(symbols("p1:4", real=True))
+v = Matrix(symbols("v1:4", real=True))
 
-r_i = Symbol("r_i")
-t_i = Symbol("t_i")
-p_i = Matrix(symbols("p_i(1:4)"))
+r_i = Symbol("r_i", real=True)
+t_i = Symbol("t_i", real=True)
+p_i = Matrix(symbols("p_i(1:4)", real=True))
 
 
-pdotp = Symbol("pdotp")
-pdotv = Symbol("pdotv")
-vdotv = Symbol("vdotv")
+pdotp = Symbol("pdotp", real=True)
+pdotv = Symbol("pdotv", real=True)
+vdotv = Symbol("vdotv", real=True)
 
 x = Matrix([p, v, Matrix([pdotp, pdotv, vdotv])])
 
@@ -23,6 +23,6 @@ _calc_A = lambdify([t_i, r_i, p_i], _A)
 _calc_b = lambdify([t_i, r_i, p_i], _b)
 
 def muppettree_fit(observations):
-    A = np.vstack([_calc_A(*observations[i]) for i in range(len(observations))])
-    b = np.vstack([_calc_b(*observations[i]) for i in range(len(observations))])
+    A = np.vstack([_calc_A(*obs) for obs in observations])
+    b = np.vstack([_calc_b(*obs) for obs in observations])
     return np.linalg.lstsq(A,b,rcond=None)
